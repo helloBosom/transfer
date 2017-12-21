@@ -10,13 +10,17 @@ import java.net.Socket;
 
 /**
  * 转为监听器后实现类，若收到远端第一次握手请求，则响应予以回复第二次握手
- * 若收到远端第三次握手请求，则响应予以回复可以开始传输文件
+ * 若收到远端第三次握手请求，则可以开始接收文件
  */
 public class HolePortListenerHandler implements Runnable {
 
     Socket socket;
     InputStream inputStream;
     OutputStream outputStream;
+
+    private int byteRead;
+    private volatile int start = 0;
+    private String file_dir = "F:";
 
     public HolePortListenerHandler(Socket socket) {
         this.socket = socket;
@@ -45,6 +49,9 @@ public class HolePortListenerHandler implements Runnable {
                 ThirdHandshakeMessage thirdHandshakeMessage = (ThirdHandshakeMessage) message;
                 dealThirdHandshakeMessage(thirdHandshakeMessage);
             }
+            if (message instanceof FileMessage) {
+                dealFileMessage((FileMessage) message);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -66,14 +73,36 @@ public class HolePortListenerHandler implements Runnable {
 
     private void dealThirdHandshakeMessage(ThirdHandshakeMessage thirdHandshakeMessage) {
         if (HandshakeField.THIRD_HANDSHAKE.equals(thirdHandshakeMessage.getHeader())) {
-            SendFileMessage sendFileMessage = new SendFileMessage();
-            sendFileMessage.setHeader(HandshakeField.SENDFILE);
-            try {
-                sendFileMessage.setId(InetUtil.getProperties("").getProperty("localId"));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            //TODO 向远端发送可以开始发送文件消息
+            //TODO 接收文件
+
+
         }
     }
+
+    void dealFileMessage(FileMessage fileMessage) {
+        //TODO 判断开始结束消息
+        byte[] bytes = fileMessage.getBytes();
+        byteRead = fileMessage.getEndPos();
+        String md5 = fileMessage.getFile_md5();//文件名
+        String path = file_dir + File.separator + md5;
+        File file = new File(path);
+        try {
+            RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw");
+            randomAccessFile.seek(start);
+            randomAccessFile.write(bytes);
+            start = start + byteRead;
+            System.out.println("path:" + path + "," + byteRead);
+            if (byteRead > 0) {
+                //TODO
+                outputStream.write(start);
+                randomAccessFile.close();
+
+            } else {
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
