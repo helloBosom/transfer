@@ -9,21 +9,14 @@ import org.apache.commons.httpclient.NameValuePair;
 class HttpRequest {
 
     private int connectionTimeout;
-
     private int timeout;
-
     private String charset;
-
     private String method;
-
     static final String METHOD_GET = "get";
-
+    static final String METHOD_POST = "post";
     private String url;
-
     private String queryString;
-
     NameValuePair[] Parameters;
-
     String resultType;
 
     public HttpRequest(String resultType) {

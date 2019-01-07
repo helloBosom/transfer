@@ -8,14 +8,9 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>client</artifactId>
-    <dependencies>
-        <dependency>
-            <groupId>fun.peri</groupId>
-            <artifactId>util</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-    </dependencies>
+
+    <groupId>fun.peri</groupId>
+    <artifactId>util</artifactId>
+
 
 </project>
