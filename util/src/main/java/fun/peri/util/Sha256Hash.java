@@ -1,8 +1,10 @@
-package fun.peri.utils;
+package fun.peri.util;
 
 import com.google.common.io.ByteStreams;
 import com.google.common.primitives.Ints;
+import lombok.NonNull;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -14,10 +16,13 @@ import java.util.Arrays;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+/**
+ * @author unknow
+ */
 public class Sha256Hash implements Serializable, Comparable<Sha256Hash> {
 
     private static final long serialVersionUID = 1L;
-    public static final int LENGTH = 32; // bytes
+    private static final int LENGTH = 32;
     public static final Sha256Hash ZERO_HASH = wrap(new byte[LENGTH]);
 
     private final byte[] bytes;
@@ -65,7 +70,8 @@ public class Sha256Hash implements Serializable, Comparable<Sha256Hash> {
         try {
             return MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);  // Can't happen.
+            //Can't happen.
+            throw new RuntimeException(e);
         }
     }
 
@@ -98,8 +104,12 @@ public class Sha256Hash implements Serializable, Comparable<Sha256Hash> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         return Arrays.equals(bytes, ((Sha256Hash) o).bytes);
     }
 

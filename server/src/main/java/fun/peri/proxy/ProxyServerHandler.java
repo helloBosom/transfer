@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import fun.peri.entity.Header;
 import fun.peri.manager.ConnectManager;
 import fun.peri.message.ConnectedMessage;
-import fun.peri.message.Message;
+import fun.peri.message.BaseMessage;
 import fun.peri.message.NATInfo;
 import fun.peri.message.TransferMessage;
 
@@ -13,16 +13,19 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
-
+/**
+ * @author hellobosom@gmail.com
+ */
 public class ProxyServerHandler implements Runnable {
 
     private Socket socket;
-    InputStream in;
+    private InputStream in;
 
     public ProxyServerHandler(Socket socket) {
         this.socket = socket;
     }
 
+    @Override
     public void run() {
         try {
             in = new DataInputStream(socket.getInputStream());
@@ -34,11 +37,11 @@ public class ProxyServerHandler implements Runnable {
             }
             String str = byteOS.toString();
             //TODO 序列化有问题，须统一消息格式
-            Message message = new Gson().fromJson(str, Message.class);
+            BaseMessage message = new Gson().fromJson(str, BaseMessage.class);
             //协助打洞请求
             if (message instanceof TransferMessage) {
                 TransferMessage transferMessage = (TransferMessage) message;
-                if ("applyTransfer".equals(transferMessage.getHeader())) {
+                if (Header.APPLY_TRANSFER.equals(transferMessage.getHeader())) {
                     NATInfo natInfo = new NATInfo();
                     natInfo.setHeader(Header.CONNECT);
                     natInfo.setIp(socket.getInetAddress().getHostAddress());
@@ -49,7 +52,7 @@ public class ProxyServerHandler implements Runnable {
             //
             if (message instanceof ConnectedMessage) {
                 ConnectedMessage connectedMessage = (ConnectedMessage) message;
-                if ("connected".equals(connectedMessage.getHeader())) {
+                if (Header.CONNECTED.equals(connectedMessage.getHeader())) {
                     NATInfo natInfo = new NATInfo();
                     natInfo.setHeader(Header.CONNECT);
                     natInfo.setIp(socket.getInetAddress().getHostAddress());

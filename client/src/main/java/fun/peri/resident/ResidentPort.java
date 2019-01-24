@@ -6,10 +6,12 @@ import java.net.Socket;
 
 /**
  * 常驻客户端
+ *
+ * @author hellobosom@gmail.com
  */
 public class ResidentPort {
 
-    Socket socket;
+    private Socket socket;
 
     /**
      * @param remoteAddress 远端地址

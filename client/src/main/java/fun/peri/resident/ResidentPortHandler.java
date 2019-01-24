@@ -1,10 +1,9 @@
 package fun.peri.resident;
 
 import com.google.gson.Gson;
-import fun.peri.constant.Constants;
+import fun.peri.constant.TCPStatusEnum;
 import fun.peri.manager.ConnectManager;
 import fun.peri.message.*;
-import fun.peri.message.Message;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -12,19 +11,25 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+import java.util.Objects;
+
 /**
  * 常驻客户端处理类，接受服务端消息并处理
+ *
+ * @author hellobosom@gmail.com
  */
 public class ResidentPortHandler implements Runnable {
 
-    Socket socket;
+    private Socket socket;
     DataOutputStream dataOutputStream;
-    DataInputStream dataInputStream;
+    private DataInputStream dataInputStream;
+
 
     public ResidentPortHandler(Socket socket) {
         this.socket = socket;
     }
 
+    @Override
     public void run() {
         try {
             if (null != socket.getInputStream()) {
@@ -37,7 +42,7 @@ public class ResidentPortHandler implements Runnable {
                 }
                 String str = byteArrayOutputStream.toString();
                 //TODO
-                Message message = new Gson().fromJson(str, Message.class);
+                BaseMessage message = new Gson().fromJson(str, BaseMessage.class);
                 //打洞下载文件请求
                 if (message instanceof FileConnectMessage) {
                     FileConnectMessage fileConnectMessage = (FileConnectMessage) message;
@@ -63,7 +68,7 @@ public class ResidentPortHandler implements Runnable {
 
     private void dealConnectedMessage(ConnectedMessage connectedMessage) {
         NATInfoMessage natInfoMessage = new NATInfoMessage();
-        natInfoMessage.setHeader(Constants.CONNECT);
+        natInfoMessage.setHeader(TCPStatusEnum.CONNECT);
         natInfoMessage.setOutsideIp(connectedMessage.getRemoteOutsideIp());
         natInfoMessage.setOutsidePort(connectedMessage.getRemoteOutsidePort());
         natInfoMessage.setInsideIp(connectedMessage.getRemoteInsideIp());

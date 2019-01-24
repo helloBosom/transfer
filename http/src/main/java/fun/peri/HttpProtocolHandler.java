@@ -13,6 +13,7 @@ import java.net.UnknownHostException;
 
 /**
  * fun.peri.HttpProtocolHandler 是模拟HTTP请求的核心类，最主要的是execute这个执行HTTP请求的方法
+ * @author unkown
  */
 
 public class HttpProtocolHandler {

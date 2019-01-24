@@ -7,9 +7,10 @@ import java.io.Serializable;
 
 /**
  * 消息基类
+ * @author hellobosom@gmail.com
  */
 @Getter
 @Setter
-public abstract class Message implements Serializable {
-    Enum header;
+public abstract class BaseMessage implements Serializable {
+    protected Enum header;
 }

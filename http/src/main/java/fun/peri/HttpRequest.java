@@ -16,7 +16,7 @@ class HttpRequest {
     static final String METHOD_POST = "post";
     private String url;
     private String queryString;
-    NameValuePair[] Parameters;
+    NameValuePair[] parameters;
     String resultType;
 
     public HttpRequest(String resultType) {

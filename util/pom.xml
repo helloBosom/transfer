@@ -9,8 +9,6 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>fun.peri</groupId>
     <artifactId>util</artifactId>
-
 
 </project>

@@ -1,4 +1,4 @@
-package fun.peri.utils.protostuff;
+package fun.peri.util.protostuff;
 
 import com.dyuproject.protostuff.LinkedBuffer;
 import com.dyuproject.protostuff.ProtobufIOUtil;
@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * @author
  * protostuff
  * Objenesis是一个小型java类库用来实例化一个特定class的对象
  */

@@ -3,12 +3,15 @@ package fun.peri.message;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * @author hellobosom@gmail.com
+ */
 @Getter
 @Setter
-public class NATInfoMessage extends Message {
-    String outsideIp;
-    int outsidePort;
-    String insideIp;
-    int insidePort;
-    String id;
+public class NATInfoMessage extends BaseMessage {
+    private String outsideIp;
+    private Integer outsidePort;
+    private String insideIp;
+    private Integer insidePort;
+    private String id;
 }

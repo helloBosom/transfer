@@ -1,6 +1,6 @@
-package fun.peri.utils;
+package fun.peri.util;
 
-import fun.peri.message.Message;
+import fun.peri.message.BaseMessage;
 import io.netty.buffer.ByteBuf;
 import io.protostuff.LinkedBuffer;
 import io.protostuff.ProtostuffIOUtil;
@@ -22,11 +22,11 @@ public abstract class MessageSerializer {
     private static Objenesis objenesis = new ObjenesisStd(true);
     static Map<Class<?>, Schema<?>> cachedSchema = new ConcurrentHashMap<>();
 
-    public abstract byte[] serialize(Message message) throws UnsupportedOperationException;
+    public abstract byte[] serialize(BaseMessage message) throws UnsupportedOperationException;
 
-    public abstract Message deserialize(ByteBuffer in);
+    public abstract BaseMessage deserialize(ByteBuffer in);
 
-    public abstract Message deserialize(ByteBuf in);
+    public abstract BaseMessage deserialize(ByteBuf in);
 
     <T> byte[] doSerialize(T obj) {
         if (obj == null) {

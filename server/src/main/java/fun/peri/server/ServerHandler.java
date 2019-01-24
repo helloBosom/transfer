@@ -1,11 +1,14 @@
 package fun.peri.server;
 
 import com.google.gson.Gson;
-import fun.peri.message.Message;
+import fun.peri.message.BaseMessage;
 
 import java.io.*;
 import java.net.Socket;
 
+/**
+ * @author hellobosom@gmail.com
+ */
 public class ServerHandler implements Runnable {
 
     private Socket socket;
@@ -16,6 +19,7 @@ public class ServerHandler implements Runnable {
         this.socket = socket;
     }
 
+    @Override
     public void run() {
         try {
             in = new DataInputStream(socket.getInputStream());
@@ -27,7 +31,7 @@ public class ServerHandler implements Runnable {
             }
             String str = byteOS.toString();
             //TODO
-            Message message = new Gson().fromJson(str, Message.class);
+            BaseMessage message = new Gson().fromJson(str, BaseMessage.class);
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -1,9 +1,11 @@
 package fun.peri.constant;
 
 /**
+ * @author hellobosom@gmail.com
  * 常量
+ * 枚举就是特殊的常量类，且构造方法被默认强制是私有
  */
-public enum Constants {
+public enum TCPStatusEnum {
     /**
      * 三次握手
      */

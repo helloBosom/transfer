@@ -1,4 +1,4 @@
-package fun.peri.utils;
+package fun.peri.util;
 
 import java.io.FileInputStream;
 import java.io.IOException;

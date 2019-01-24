@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-
+/**
+ * @author hellobosom@gmail.com
+ */
 public class ProxyServer {
 
-    Socket socket;
+    private Socket socket;
 
     public void start(InetAddress inetAddress, int backlog, int port) {
         try {

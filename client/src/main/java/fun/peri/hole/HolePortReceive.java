@@ -6,11 +6,11 @@ import java.net.Socket;
 import java.net.SocketException;
 
 /**
- *
+ *@author hellobosom@gmail.com
  */
 public class HolePortReceive {
 
-    Socket socket;
+    private Socket socket;
 
     public void start(InetAddress remoteAddress, int remotePort, InetAddress localAddress, int localPort) {
         try {

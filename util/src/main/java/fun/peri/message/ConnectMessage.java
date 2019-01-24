@@ -4,14 +4,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
+ * @author hellobosom@gmail.com
  * 连接消息
  */
 @Getter
 @Setter
-public class ConnectMessage extends Message {
+public class ConnectMessage extends BaseMessage {
     private String id;
     private String remoteIp;
-    private int remotePort;
+    private Integer remotePort;
     private String localIp;
-    private int localPort;
+    private Integer localPort;
 }

@@ -1,4 +1,4 @@
-package fun.peri.utils.protostuff;
+package fun.peri.util.protostuff;
 
 import io.protostuff.LinkedBuffer;
 import io.protostuff.ProtobufIOUtil;
@@ -8,7 +8,7 @@ import io.protostuff.runtime.RuntimeSchema;
 import java.lang.reflect.InvocationTargetException;
 
 /**
- * protostuff
+ * @author unkown
  */
 public class Protostuff {
 

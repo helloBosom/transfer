@@ -1,13 +1,9 @@
 package fun.peri.hole;
 
 import com.google.gson.Gson;
-import fun.peri.constant.Constants;
-import fun.peri.message.FileMessage;
-import fun.peri.message.Message;
-import fun.peri.message.SecondHandshakeMessage;
-import fun.peri.message.SendFileMessage;
-import fun.peri.message.ThirdHandshakeMessage;
-import fun.peri.utils.InetUtil;
+import fun.peri.constant.TCPStatusEnum;
+import fun.peri.message.*;
+import fun.peri.util.InetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,13 +13,16 @@ import java.net.Socket;
 /**
  * 接收到第二次握手，予以回复第三次握手消息
  * sleep后,开始发送文件
+ *
+ * @author hellobosom@gmail.com
  */
 public class HolePortReceiveHandler implements Runnable {
-    static final Logger logger = LoggerFactory.getLogger(HolePortReceiveHandler.class);
-    Socket socket;
-    InputStream inputStream;
-    OutputStream outputStream;
-    String fileLocation;
+
+    private static final Logger logger = LoggerFactory.getLogger(HolePortReceiveHandler.class);
+    private Socket socket;
+    private InputStream inputStream;
+    private OutputStream outputStream;
+    private String fileLocation;
 
     private int byteRead;
     private volatile int start = 0;
@@ -47,7 +46,7 @@ public class HolePortReceiveHandler implements Runnable {
             }
             String str = outputStream.toString();
             //TODO
-            Message message = new Gson().fromJson(str, Message.class);
+            BaseMessage message = new Gson().fromJson(str, BaseMessage.class);
             //第二次握手
             if (message instanceof SecondHandshakeMessage) {
                 SecondHandshakeMessage secondHandshakeMessage = (SecondHandshakeMessage) message;
@@ -61,9 +60,9 @@ public class HolePortReceiveHandler implements Runnable {
 
 
     private void dealSecondHandshakeMessage(SecondHandshakeMessage secondHandshakeMessage) {
-        if (Constants.SECOND_HANDSHAKE.toString().equals(secondHandshakeMessage.getHeader())) {
+        if (TCPStatusEnum.SECOND_HANDSHAKE.toString().equals(secondHandshakeMessage.getHeader())) {
             ThirdHandshakeMessage thirdHandshakeMessage = new ThirdHandshakeMessage();
-            thirdHandshakeMessage.setHeader(Constants.THIRD_HANDSHAKE);
+            thirdHandshakeMessage.setHeader(TCPStatusEnum.THIRD_HANDSHAKE);
             try {
                 thirdHandshakeMessage.setId(InetUtil.getProperties("").getProperty("localId"));
             } catch (IOException e) {
@@ -83,7 +82,7 @@ public class HolePortReceiveHandler implements Runnable {
      * @param sendFileMessage
      */
     private void dealSendFileMessage(SendFileMessage sendFileMessage) {
-        if (Constants.SENDFILE.equals(sendFileMessage.getHeader())) {
+        if (TCPStatusEnum.SENDFILE.equals(sendFileMessage.getHeader())) {
             File download = new File(fileLocation);
             try {
                 randomAccessFile = new RandomAccessFile(fileUploadFile.getFile(), "r");
@@ -117,10 +116,8 @@ public class HolePortReceiveHandler implements Runnable {
                 }
                 logger.info("文件长度：" + (randomAccessFile.length()) + ",start:" + start + ",a:" + a + ",b:" + b + ",lastLength:" + lastLength);
                 byte[] bytes = new byte[lastLength];
-                // log.info("-----------------------------" + bytes.length);
                 if ((byteRead = randomAccessFile.read(bytes)) != -1
                         && (randomAccessFile.length() - start) > 0) {
-                    // log.info("byte 长度：" + bytes.length);
                     fileUploadFile.setEndPos(byteRead);
                     fileUploadFile.setBytes(bytes);
                     try {
@@ -130,7 +127,6 @@ public class HolePortReceiveHandler implements Runnable {
                     }
                 } else {
                     randomAccessFile.close();
-
                 }
             } catch (IOException e) {
                 e.printStackTrace();

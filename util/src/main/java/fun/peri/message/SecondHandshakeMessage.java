@@ -5,9 +5,10 @@ import lombok.Setter;
 
 /**
  * 第二次握手消息
+ * @author hellobosom@gmail.com
  */
 @Getter
 @Setter
-public class SecondHandshakeMessage extends Message {
-    String id;
+public class SecondHandshakeMessage extends BaseMessage {
+    private String id;
 }

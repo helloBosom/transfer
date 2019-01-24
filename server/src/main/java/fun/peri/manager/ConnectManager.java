@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * @author hellobosom@gmail.com
+ */
 public class ConnectManager {
     public static LinkedList<NATInfo> awaitConnect = new LinkedList<NATInfo>();
     public static List<NATInfo> connected = new LinkedList<NATInfo>();

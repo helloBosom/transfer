@@ -1,4 +1,4 @@
-package fun.peri.utils;
+package fun.peri.util;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Joiner;
@@ -26,6 +26,9 @@ import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+/**
+ * @author unknow
+ */
 public class Utils {
 
     private static final Joiner SPACE_JOINER = Joiner.on(" ");
@@ -128,8 +131,9 @@ public class Utils {
 
     public static byte[] reverseBytes(byte[] bytes) {
         byte[] buf = new byte[bytes.length];
-        for (int i = 0; i < bytes.length; i++)
+        for (int i = 0; i < bytes.length; i++) {
             buf[i] = bytes[bytes.length - 1 - i];
+        }
         return buf;
     }
 
@@ -147,20 +151,20 @@ public class Utils {
     }
 
     public static long readUint32(byte[] bytes, int offset) {
-        return (bytes[offset] & 0xffl) | ((bytes[offset + 1] & 0xffl) << 8) | ((bytes[offset + 2] & 0xffl) << 16)
-                | ((bytes[offset + 3] & 0xffl) << 24);
+        return (bytes[offset] & 0xffL) | ((bytes[offset + 1] & 0xffL) << 8) | ((bytes[offset + 2] & 0xffL) << 16)
+                | ((bytes[offset + 3] & 0xffL) << 24);
     }
 
     public static long readInt64(byte[] bytes, int offset) {
-        return (bytes[offset] & 0xffl) | ((bytes[offset + 1] & 0xffl) << 8) | ((bytes[offset + 2] & 0xffl) << 16)
-                | ((bytes[offset + 3] & 0xffl) << 24) | ((bytes[offset + 4] & 0xffl) << 32)
-                | ((bytes[offset + 5] & 0xffl) << 40) | ((bytes[offset + 6] & 0xffl) << 48)
-                | ((bytes[offset + 7] & 0xffl) << 56);
+        return (bytes[offset] & 0xffL) | ((bytes[offset + 1] & 0xffL) << 8) | ((bytes[offset + 2] & 0xffL) << 16)
+                | ((bytes[offset + 3] & 0xffL) << 24) | ((bytes[offset + 4] & 0xffL) << 32)
+                | ((bytes[offset + 5] & 0xffL) << 40) | ((bytes[offset + 6] & 0xffL) << 48)
+                | ((bytes[offset + 7] & 0xffL) << 56);
     }
 
     public static long readUint32BE(byte[] bytes, int offset) {
-        return ((bytes[offset] & 0xffl) << 24) | ((bytes[offset + 1] & 0xffl) << 16)
-                | ((bytes[offset + 2] & 0xffl) << 8) | (bytes[offset + 3] & 0xffl);
+        return ((bytes[offset] & 0xffL) << 24) | ((bytes[offset + 1] & 0xffL) << 16)
+                | ((bytes[offset + 2] & 0xffL) << 8) | (bytes[offset + 3] & 0xffL);
     }
 
     public static int readUint16BE(byte[] bytes, int offset) {
@@ -173,47 +177,56 @@ public class Utils {
             int length = (int) readUint32BE(mpi, 0);
             buf = new byte[length];
             System.arraycopy(mpi, 4, buf, 0, length);
-        } else
+        } else {
             buf = mpi;
-        if (buf.length == 0)
+        }
+        if (buf.length == 0) {
             return BigInteger.ZERO;
+        }
         boolean isNegative = (buf[0] & 0x80) == 0x80;
-        if (isNegative)
+        if (isNegative) {
             buf[0] &= 0x7f;
+        }
         BigInteger result = new BigInteger(buf);
         return isNegative ? result.negate() : result;
     }
 
     public static byte[] encodeMPI(BigInteger value, boolean includeLength) {
         if (value.equals(BigInteger.ZERO)) {
-            if (!includeLength)
+            if (!includeLength) {
                 return new byte[]{};
-            else
+            } else {
                 return new byte[]{0x00, 0x00, 0x00, 0x00};
+            }
         }
         boolean isNegative = value.signum() < 0;
-        if (isNegative)
+        if (isNegative) {
             value = value.negate();
+        }
         byte[] array = value.toByteArray();
         int length = array.length;
-        if ((array[0] & 0x80) == 0x80)
+        if ((array[0] & 0x80) == 0x80) {
             length++;
+        }
         if (includeLength) {
             byte[] result = new byte[length + 4];
             System.arraycopy(array, 0, result, length - array.length + 3, array.length);
             uint32ToByteArrayBE(length, result, 0);
-            if (isNegative)
+            if (isNegative) {
                 result[4] |= 0x80;
+            }
             return result;
         } else {
             byte[] result;
             if (length != array.length) {
                 result = new byte[length];
                 System.arraycopy(array, 0, result, 1, array.length);
-            } else
+            } else {
                 result = array;
-            if (isNegative)
+            }
+            if (isNegative) {
                 result[0] |= 0x80;
+            }
             return result;
         }
     }
@@ -222,22 +235,26 @@ public class Utils {
         int size = ((int) (compact >> 24)) & 0xFF;
         byte[] bytes = new byte[4 + size];
         bytes[3] = (byte) size;
-        if (size >= 1)
+        if (size >= 1) {
             bytes[4] = (byte) ((compact >> 16) & 0xFF);
-        if (size >= 2)
+        }
+        if (size >= 2) {
             bytes[5] = (byte) ((compact >> 8) & 0xFF);
-        if (size >= 3)
+        }
+        if (size >= 3) {
             bytes[6] = (byte) (compact & 0xFF);
+        }
         return decodeMPI(bytes, true);
     }
 
     public static long encodeCompactBits(BigInteger value) {
         long result;
         int size = value.toByteArray().length;
-        if (size <= 3)
+        if (size <= 3) {
             result = value.longValue() << 8 * (3 - size);
-        else
+        } else {
             result = value.shiftRight(8 * (size - 3)).longValue();
+        }
         if ((result & 0x00800000L) != 0) {
             result >>= 8;
             size++;
@@ -341,7 +358,7 @@ public class Utils {
         return System.getProperty("os.name").toLowerCase().contains("win");
     }
 
-    public static final String ZHANGWEIQIANG_SIGNED_MESSAGE_HEADER = "Zhangweiqiang Signed Message:\n";
+    public static final String ZHANGWEIQIANG_SIGNED_MESSAGE_HEADER = "Zhangweiqiang Signed BaseMessage:\n";
     public static final byte[] ZHANGWEIQIANG_SIGNED_MESSAGE_HEADER_BYTES = ZHANGWEIQIANG_SIGNED_MESSAGE_HEADER.getBytes(Charsets.UTF_8);
 
     public static byte[] formatMessageForSigning(String message) {
@@ -354,7 +371,7 @@ public class Utils {
             bos.write(messageBytes);
             return bos.toByteArray();
         } catch (IOException e) {
-            throw new RuntimeException(e);  // Cannot happen.
+            throw new RuntimeException(e);
         }
     }
 
@@ -504,12 +521,13 @@ public class Utils {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if (file2 != null)
+            if (file2 != null) {
                 try {
                     file2.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            }
         }
         return false;
     }
@@ -660,7 +678,9 @@ public class Utils {
 
     public static int maxOfMostFreq(int... items) {
         ArrayList<Integer> list = new ArrayList<>(items.length);
-        for (int item : items) list.add(item);
+        for (int item : items) {
+            list.add(item);
+        }
         return maxOfMostFreq(list);
     }
 
@@ -673,8 +693,9 @@ public class Utils {
         pairs.add(new Pair(items.get(0), 0));
         for (int item : items) {
             Pair pair = pairs.getLast();
-            if (pair.item != item)
+            if (pair.item != item) {
                 pairs.add((pair = new Pair(item, 0)));
+            }
             pair.count++;
         }
         Collections.sort(pairs);

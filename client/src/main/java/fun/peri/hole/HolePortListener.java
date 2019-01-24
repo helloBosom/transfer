@@ -7,10 +7,12 @@ import java.net.Socket;
 
 /**
  * 连接端口转为监听服务器，并放入管理类，此处不调用关闭
+ *
+ * @author hellobosom@gmail.com
  */
 public class HolePortListener {
 
-    ServerSocket serverSocket;
+    private ServerSocket serverSocket;
 
     /**
      * @param inetAddress 服务端绑定的ip地址

@@ -1,7 +1,7 @@
-package fun.peri.utils;
+package fun.peri.util;
 
-import fun.peri.message.EmptyMessage;
-import fun.peri.message.Message;
+import fun.peri.message.AbstractEmptyMessage;
+import fun.peri.message.BaseMessage;
 import io.netty.buffer.ByteBuf;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,8 +9,8 @@ import org.slf4j.LoggerFactory;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 
-import static fun.peri.utils.Utils.uint32ToByteArrayBE;
-import static fun.peri.utils.Utils.uint32ToByteArrayLE;
+import static fun.peri.util.Utils.uint32ToByteArrayBE;
+import static fun.peri.util.Utils.uint32ToByteArrayLE;
 
 /**
  * protocol message has the following format.<br/>
@@ -27,9 +27,9 @@ public class NetSerializer extends MessageSerializer {
     private static final int HEADER_LEN = 4 + COMMAND_LEN + 4 + 4;
 
     @Override
-    public byte[] serialize(Message message) {
+    public byte[] serialize(BaseMessage message) {
         byte[] messageByte = new byte[0];
-        if (!(message instanceof EmptyMessage)) {
+        if (!(message instanceof AbstractEmptyMessage)) {
             messageByte = doSerialize(message);
         }
         byte[] headerByte = new byte[HEADER_LEN];
@@ -44,14 +44,14 @@ public class NetSerializer extends MessageSerializer {
     }
 
     @Override
-    public Message deserialize(ByteBuffer in) {
+    public BaseMessage deserialize(ByteBuffer in) {
         seekPastMagicBytes(in);
-        Message message = null;
+        BaseMessage message = null;
         return message;
     }
 
     @Override
-    public Message deserialize(ByteBuf in) {
+    public BaseMessage deserialize(ByteBuf in) {
         byte[] byteArray = new byte[in.readableBytes()];
         in.readBytes(byteArray);
         return deserialize(ByteBuffer.wrap(byteArray));

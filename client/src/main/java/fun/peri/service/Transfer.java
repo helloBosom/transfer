@@ -1,19 +1,21 @@
 package fun.peri.service;
 
-import fun.peri.constant.Constants;
-import fun.peri.hole.HolePortSendMessage;
+import fun.peri.constant.TCPStatusEnum;
 import fun.peri.hole.HolePortListener;
+import fun.peri.hole.HolePortSendMessage;
 import fun.peri.manager.Management;
 import fun.peri.message.TransferMessage;
-import fun.peri.utils.InetUtil;
+import fun.peri.util.InetUtil;
 
 import java.io.IOException;
 import java.net.InetAddress;
 
 /**
  * 实现类
+ *
+ * @author hellobosom@gmail.com
  */
-public class Transfer{
+public class Transfer {
 
     /**
      * 发送打洞申请
@@ -22,7 +24,7 @@ public class Transfer{
         HolePortSendMessage holePortApplyTransfer = new HolePortSendMessage();
         try {
             TransferMessage transferInfo = new TransferMessage();
-            transferInfo.setHeader(Constants.APPLY_TRANSFER);
+            transferInfo.setHeader(TCPStatusEnum.APPLY_TRANSFER);
             transferInfo.setIdFrom(InetUtil.getProperties("").getProperty("publicKeyFrom"));
             transferInfo.setIdTo(remoteId);
             transferInfo.setInsideIp(InetAddress.getLocalHost().getHostAddress());

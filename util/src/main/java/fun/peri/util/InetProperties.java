@@ -1,4 +1,4 @@
-package fun.peri.properties;
+package fun.peri.util;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class InetProperties {
-    String localIp;
+    private String localIp;
     int localPort;
     String serverIp;
     int serverPort;

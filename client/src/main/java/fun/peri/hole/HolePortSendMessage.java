@@ -1,6 +1,6 @@
 package fun.peri.hole;
 
-import fun.peri.message.Message;
+import fun.peri.message.BaseMessage;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -8,10 +8,12 @@ import java.net.Socket;
 
 /**
  * 发送消息
+ *
+ * @author goon
  */
 public class HolePortSendMessage {
 
-    Socket socket;
+    private Socket socket;
 
     /**
      * @param remoteAddress 远端地址
@@ -19,7 +21,7 @@ public class HolePortSendMessage {
      * @param localAddress  本地地址
      * @param localPort     本地端口
      */
-    public void start(Message message, InetAddress remoteAddress, int remotePort, InetAddress localAddress, int localPort) {
+    public void start(BaseMessage message, InetAddress remoteAddress, int remotePort, InetAddress localAddress, int localPort) {
         try {
             socket = new Socket(remoteAddress, remotePort, localAddress, localPort);
             socket.setReuseAddress(true);

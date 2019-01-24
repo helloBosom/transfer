@@ -5,13 +5,16 @@ import lombok.Setter;
 
 import java.io.File;
 
+/**
+ * @author hellobosom@gmail.com
+ */
 @Getter
 @Setter
-public class FileMessage extends Message {
-    private static final long serialVersionUID = 1L;
+public class FileMessage extends BaseMessage {
+    private static final Long serialVersionUID = 1L;
     private File file;
-    private String file_md5;
-    private int starPos;
-    private byte[] bytes;
-    private int endPos;
+    private String fileMD5;
+    private Integer starPos;
+    private byte[] bytes ;
+    private Integer endPos;
 }
